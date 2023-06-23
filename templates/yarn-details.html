@@ -1,0 +1,38 @@
+{% extends "layout.html" %}
+{% block content %}
+  <div class="container">
+    {% if yarn %}
+      <h4>{{ yarn["Name"] }}</h4>
+      <div class="col-8">
+        <table class="table table-striped table-hover mx-auto table-bordered">
+          {% for key in yarn %}
+            {% if key != "Name" %}
+              <tr>
+                <th>{{ key }}</th>
+                <td>{{ yarn[key] }}</td>
+              </tr>
+            {% endif %}
+          {% endfor %}
+        </table>.
+      </div>
+      <hr>
+    {% endif %}
+  </div>
+  {% if subs %}
+  <div class="container">
+    <h4>Substitutes</h4>
+    <br>
+    {% for sub in subs %}
+      <h5>{{ sub["Name"] }}</h5>
+      <h6>{{ sub["Brand"] }}</h6>
+      <p>{{ sub["Match"] }}</p>
+      <ul>
+        {% for msg in sub["Messages"] %}
+        <li>{{ msg }}</li>
+        {% endfor %}
+        <hr>
+      </ul>
+    {% endfor %}
+  {% endif %}
+  </div>
+{% endblock content %}

@@ -1,0 +1,94 @@
+{% extends "layout.html" %}
+{% block content %}
+  <h3>Home</h3>
+  <section id="sizes">
+    <div class="row">
+      <h5>Needle and Hook Sizes</h5>
+      {% for df in needle_dfs %}
+        <div class="col-4">
+          <table class="table table-striped table-hover table-bordered mx-auto text-center">
+            <thead>
+              <tr>
+                <th scope="col">Metric</th>
+                <th scope="col">US Needle</th>
+                <th scope="col">Crochet</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for row in df.index %}
+                <tr>
+                  <th scope="row">{{ df["Metric"][row] }}</th>
+                  <td>{{ df["US"][row] }}</td>
+                  <td>{{ df["Crochet"][row] }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% endfor %}
+    </div>
+  </section>
+  <hr>
+  <section id="weights">
+    <h5>Yarn Weights</h5>
+    <table class="table table-striped table-hover table-bordered mx-auto text-center">
+      <thead>
+        <tr>
+          <th scope="col">Weight</th>
+          <th scope="col">Common Names</th>
+          <th scope="col">Recommended Needle Size</th>
+          <th scope="col">Recommended Hook Size</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for row in yarn_df.index %}
+        <tr>
+          <th scope="row">{{ yarn_df["Weight"][row] }} ({{ yarn_df["Number"][row] }})</th>
+          <td>{{ yarn_df["Common Names"][row] }}</td>
+          <td>{{ yarn_df["Needle Size"][row] }}</td>
+          <td>{{ yarn_df["Hook Size"][row] }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </section>
+  <hr>
+  <section id="k-abbreviations">
+    <h5>Knitting Abbreviations</h5>
+    <br>
+    <table class="table table-striped table-hover table-bordered mx-auto">
+      <thead>
+        <tr>
+          <th scope="col">Abbreviation</th>
+          <th scope="col">Meaning</th>
+        </tr>
+      </thead>
+      {% for row in knit_df.index %}
+        <tr>
+          <td>{{ knit_df["Abbreviation"][row] }}</td>
+          <td>{{ knit_df["Meaning"][row] }}</td>
+        </tr>
+      {% endfor %}
+    </table>
+  </section>
+  <hr>
+  <section id="c-abbreviations">
+    <h5>Crochet Abbreviations</h5>
+    <table class="table table-striped table-hover table-bordered mx-auto">
+      <thead>
+        <tr>
+          <th scope="col">Abbreviation</th>
+          <th scope="col">Meaning</th>
+        </tr>
+      </thead>
+      {% for row in crochet_df.index %}
+        <tr>
+          <td>{{ crochet_df["Abbreviation"][row] }}</td>
+          <td>{{ crochet_df["Meaning"][row] }}</td>
+        </tr>
+      {% endfor %}
+    </table>
+  </section>
+{% endblock content %}
+
+<!-- #EBEBEB #81C3D7 3a7ca5 2f6690 #16425B -->

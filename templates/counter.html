@@ -1,0 +1,133 @@
+<script>
+    function decrease(id) {
+        // Decrease number unless it is less than 1
+        let num = document.getElementById(id);
+        if (num.innerText == 0) {
+            return;
+        } else {
+            num.innerText = num.innerText - 1;
+        }
+    }
+
+    function increase(id) {
+        // Increase number
+        let num = document.getElementById(id);
+        num.innerText = Number(num.innerText) + 1;
+    }
+
+    function reset(id) {
+        // Set number to 0
+        document.getElementById(id).innerText = "0";
+    }
+
+    function addToTable(r, st, t) {
+        // Add a new row to existing table
+        let row = Number(document.getElementById(r).innerText);
+        let stitch = Number(document.getElementById(st).innerText);
+
+        // Do nothing if the row or number of stitches is 0
+        if (row == 0 || stitch == 0) {
+            return;
+        }
+
+        // Create new row in <tbody>
+        let tbody = document.getElementById(t);
+        let tr = tbody.insertRow(-1);
+
+        // Set first column to date-time
+        var td = tr.insertCell(0);
+        date = new Date().toLocaleString()
+        td.appendChild(document.createTextNode(date));
+
+        // Set second column to row
+        var td = tr.insertCell(1);
+        td.appendChild(document.createTextNode(row));
+
+        // Set third column to number of stitches
+        td = tr.insertCell(2);
+        td.appendChild(document.createTextNode(stitch));
+
+        // Set third column to a button that will delete the row
+        td = tr.insertCell(3);
+        elem = document.createElement( 'input' );
+        elem.setAttribute("type", "button");
+        elem.setAttribute("value", "Delete");
+        elem.setAttribute("onclick", 'deleteRow(this)')
+        td.appendChild(elem);
+    }
+
+    function deleteRow(r) {
+        // Delete the current row
+        let row = r.parentNode.parentNode;
+        let tbody = row.parentNode;
+        tbody.removeChild(row);
+    }
+</script>
+
+{% extends "layout.html" %}
+{% block content %}
+  <h3>Counters</h3>
+  <div class="container">
+    <div class="row">
+      <div class="col-1">
+          <h5>Row:</h5>
+      </div>
+      <div class="col-1 offset-5">
+          <h5>Stitch:</h5>
+      </div>
+    </div>
+    <div class="row counter-row">
+      <div class="col-1">
+        <button class="counter-btn counter-inc" type="button" onClick="increase('row')">+</button>
+        <button class="counter-btn counter-dec" type="button" onClick="decrease('row')">-</button>
+      </div>
+      <div class="col-3 counter-display">
+        <label class="counter-label" id="row">0</label>
+      </div>
+      <div class="col-1 offset-2">
+        <button class="counter-btn counter-inc" type="button" onClick="increase('stitch')">+</button>
+        <button class="counter-btn counter-dec" type="button" onClick="decrease('stitch')">-</button>
+      </div>
+      <div class="col-3 counter-display">
+        <label class="counter-label" id="stitch">0</label>
+      </div>
+    </div>
+    <br>
+    <div class="row btn-row">
+      <div class="col-2 offset-2">
+        <button class="counter-reset" type="button" onClick="reset('row')">Reset</button>
+      </div>
+      <div class="col-2 offset-4">
+        <button class="counter-reset" type="button" onClick="reset('stitch')">Reset</button>
+      </div>
+    </div>
+  </div>
+  <br>
+  <hr>
+  <div class="container">
+    <div class="row btn-row">
+      <div class="col-2 ">
+        <button class="counter-reset" type="button" onClick="addToTable('row', 'stitch', 'tb')">Add to Table</button>
+      </div>
+    </div>
+  </div>
+  <br>
+  <div class="container">
+    <table class="table table-striped table-hover table-bordered mx-auto text-center">
+      <thead>
+        <tr>
+          <td>Date/Time</td>
+          <td>Row</td>
+          <td>Stitches</td>
+          <td>Delete</td>
+        </tr>
+      </thead>
+      <tbody id="tb"></tbody>
+    </table>
+  </div>
+  <div class="container">
+
+  </div>
+
+
+{% endblock content %}

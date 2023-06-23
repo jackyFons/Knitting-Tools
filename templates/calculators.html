@@ -1,0 +1,245 @@
+<script type="text/javascript">
+function decrease(initialId, decId, txtId) {
+    let initial = Number(document.getElementById(initialId).value);
+    let dec = Number(document.getElementById(decId).value);
+    let txt = document.getElementById(txtId)
+
+    // Unique situations
+    if (dec < 2 || initial-dec < 2) {
+        txt.innerText = "Not Valid!";
+        return;
+    } else if (initial / dec ==  2) {
+        txt.innerText = "(k2tog) repeat 2 times.";
+        return;
+    } else if (initial == 5 && dec == 2){
+      txt.innerText = "k1, (k2tog) repeat 2 times.";
+      return;
+    }
+
+    txt.innerText = ""
+    let kSpan = Math.floor(initial / (dec+1)); // Span of knit stitches until there is a decrease
+    let remainder = initial % (kSpan+1);
+    let startSt = Math.floor(remainder/2) + (remainder % 2); // Number of stitches at the beginning of the row
+    let lastSt = Math.floor(remainder/2); // Number of stitches at the end of the row
+
+    // Count number of repeats
+    count = 0;
+    while (remainder < (initial-dec)) {
+        remainder += kSpan + 1;
+        count++;
+    }
+
+    // Put together the row pattern
+    if (startSt > 0) {
+        txt.innerText = "k" + startSt + ", ";
+    }
+    if (count  > 1) {
+        txt.innerText += "(k2tog, k" + kSpan + ") repeat " + count + " times";
+    } else {
+        txt.innerText += "k2tog, k" + kSpan;
+    }
+    if (lastSt > 0) {
+        txt.innerText +=  ", k" + lastSt;
+    }
+}
+
+function increase(initialId, incId, txtId)
+{
+    initial = Number(document.getElementById(initialId).value);
+    inc = Number(document.getElementById(incId).value);
+    txt = document.getElementById(txtId);
+
+    if (initial < 1 || inc < 1 || initial < inc)
+    {
+        console.log("here")
+        document.getElementById("incRow").innerText = "Not Valid!"
+        return;
+    }
+
+    txt.innerText = "";
+    kSpan = Math.floor(initial / (inc+1));
+    remainder = initial % (kSpan+1);
+    startSt = Math.floor(remainder/2) + (remainder % 2);
+    lastSt = Math.floor(remainder/2);
+
+    count = 0;
+    total = remainder;
+    while (total < (initial+inc)) {
+        total += kSpan + 2;
+        count++;
+    }
+
+    if (startSt > 0) {
+        txt.innerText += "k" + startSt + ", ";
+    }
+    if (count > 1) {
+        txt.innerText += "(m2, k" + kSpan + ") repeat " + count + " times";
+        if (lastSt > 0) {
+            txt.innerText += ", k" + lastSt;
+        }
+    } else {
+        txt.innerText += "m2, k" + (kSpan + lastSt);
+    }
+
+}
+
+function bindOn(stsId, widthId, txtId) {
+    width = Number(document.getElementById(widthId).value);
+    sts = Number(document.getElementById(stsId).value);
+    txt = document.getElementById(txtId)
+
+    if (width == 0 || sts == 0) {
+        txt.innerText = "Not Valid!";
+    }
+
+    sizeOfStitch = 4 / sts
+    numSts = Math.ceil(width / sizeOfStitch);
+    createdWidth = sizeOfStitch *  numSts
+
+    txt.innerText = "Bind-on " + numSts + " stitches.\nThis creates a width of " + createdWidth.toFixed(2) + " inches.";
+}
+
+function getRectangle(widthId, lengthId, rowsId, stitchesId, txtId) {
+    width = Number(document.getElementById(widthId).value);
+    length = Number(document.getElementById(lengthId).value);
+    rows = Number(document.getElementById(rowsId).value);
+    stitches = Number(document.getElementById(stitchesId).value)
+    txt = document.getElementById(txtId);
+
+    if (sWidth == 0 || length == 0 || rows == 0 || stitches == 0) {
+        txt.innerText = "Not Valid!"
+    }
+
+    sizeOfStitch = 4 / stitches
+    numSts = Math.ceil(width / sizeOfStitch);
+    createdWidth = sizeOfStitch *  numSts
+
+    sizeOfRow = 4 / rows
+    numRows = Math.ceil(length / sizeOfRow)
+    createdLength = sizeOfRow * numRows
+
+    txt.innerText = "Create " + numSts + " rows made up of " + numRows + " stitches.\n";
+    txt.innerText += "This will create a rectangle with a width of " + createdWidth.toFixed(2)
+     + " inches and a length of " + createdLength.toFixed(2) + " inches."
+}
+</script>
+
+{% extends "layout.html" %}
+{% block content %}
+<h3>Calculators</h3>
+<change-stitches>
+  <section id="decrease">
+    <h4>Decrease Stitches Evenly</h4>
+    <div class="mb-3 col-md-4">
+      <label for="startingDec" class="form-label">Starting stitches:</label>
+      <input type="number" class="form-control" value=0 id="startingDec">
+    </div>
+    <div class="mb-3 col-md-4">
+      <label for="dec" class="form-label">Stitches to decrease:</label>
+      <input type="number" class="form-control" value=0 id="dec">
+    </div>
+    <div>
+      <button class="myButton" onclick="decrease('startingDec', 'dec', 'decRow')">Get row</button>
+    </div>
+    <div>
+      <p id="decRow">Press the button to get a row with even decreases.</p>
+    </div>
+    <br>
+  </section>
+  <section id="increase">
+    <h4>Increase Stitches Evenly</h4>
+    <div class="mb-3 col-md-4">
+      <label for="startingInc" class="form-label">Starting stitches:</label>
+      <input type="number" class="form-control" value=0 id="startingInc">
+    </div>
+    <div class="mb-3 col-md-4">
+      <label for="inc" class="form-label">Stitches to increase:</label>
+      <input type="number" class="form-control" value="0" id="inc">
+    </div>
+    <div>
+      <button class="myButton" onClick="increase('startingInc', 'inc', 'incRow')">Get row</button>
+    </div>
+    <div>
+      <p id="incRow">Press the button to get a row with even increases.</p>
+    </div>
+  </section>
+</change-stitches>
+<hr>
+<section id="bind">
+  <h4>Get Bind-On Stitches</h4>
+  <div class="mb-4 col-md-12">
+    <p>Calculates the number of starting stitches needed in a bind-on for a desired width using a 4-inch by 4-inch gauge swatch.</p>
+    <br>
+    <div class="row">
+        <div class="col-4">
+          <label for="gaugeStitches" class="form-label">Stitches in 4 inches:</label>
+        </div>
+        <div class="col-4">
+          <label for="bindWidth" class="form-label">Width desired in inches:</label>
+        </div>
+      </div>
+    <div class="row">
+      <div class="col-4">
+          <input type="number" class="form-control" value="0" id="gaugeStitches">
+        </div>
+      <div class="col-4">
+          <input type="number" class="form-control" value="0" id="bindWidth">
+        </div>
+    </div>
+    <br>
+    <div>
+      <button class="myButton" onClick="bindOn('gaugeStitches', 'bindWidth', 'bindInstructions')">Get row</button>
+    </div>
+    <div>
+      <p id="bindInstructions">Press the button to get number of bind-on stitches needed.</p>
+    </div>
+  </div>
+</section>
+<hr>
+<section id="rectangle">
+<h4>Calculate Rows and Stitches for Rectangle</h4>
+<div>
+  <p><b>4-inch by 4-inch gauge:</b></p>
+  <div class="row">
+    <div class="col-4">
+      <label for="rectStitches" class="form-label">Stitches:</label>
+    </div>
+    <div class="col-4">
+      <label for="rectRows" class="form-label">Rows:</label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-4">
+      <input type="number" class="form-control" value="0" id="rectStitches">
+    </div>
+    <div class="col-4">
+      <input type="number" class="form-control" value="0" id="rectRows">
+    </div>
+  </div>
+  <br>
+  <p><b>Desired Work Measurements</b></p>
+  <div class="row">
+    <div class="col-4">
+      <label for="sWidth" class="form-label">Width:</label>
+    </div>
+    <div class="col-4">
+      <label for="length" class="form-label">Length:</label>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-4">
+      <input type="number" class="form-control" value="0" id="sWidth">
+    </div>
+    <div class="col-4">
+      <input type="number" class="form-control" value="0" id="length">
+    </div>
+  </div>
+  <br>
+  <div>
+    <button type="button" class="myButton"
+            onClick="getRectangle('sWidth', 'length', 'rectRows', 'rectStitches', 'rectangleRow')">Get instructions</button>
+  </div>
+  <p id="rectangleRow">Press the button to get the instructions.</p>
+</div>
+</section>
+{% endblock content %}
