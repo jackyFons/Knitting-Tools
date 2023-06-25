@@ -1,8 +1,9 @@
+<script src="https://cdn.jsdelivr.net/gh/linways/table-to-excel@v1.0.4/dist/tableToExcel.js"></script>
 <script>
     function decrease(id) {
-        // Decrease number unless it is less than 1
+        // Decrease number until 1
         let num = document.getElementById(id);
-        if (num.innerText == 0) {
+        if (num.innerText == 1) {
             return;
         } else {
             num.innerText = num.innerText - 1;
@@ -16,19 +17,14 @@
     }
 
     function reset(id) {
-        // Set number to 0
-        document.getElementById(id).innerText = "0";
+        // Set number to 1
+        document.getElementById(id).innerText = "1";
     }
 
     function addToTable(r, st, t) {
         // Add a new row to existing table
         let row = Number(document.getElementById(r).innerText);
         let stitch = Number(document.getElementById(st).innerText);
-
-        // Do nothing if the row or number of stitches is 0
-        if (row == 0 || stitch == 0) {
-            return;
-        }
 
         // Create new row in <tbody>
         let tbody = document.getElementById(t);
@@ -62,6 +58,23 @@
         let tbody = row.parentNode;
         tbody.removeChild(row);
     }
+
+    function download(tableId) {
+        // Download table as an excel document
+        let table = document.getElementById(tableId);
+        let rows = table.rows.length;
+
+        // Only download if rows have been added
+        if (rows > 1) {
+            TableToExcel.convert(table, {
+                name: "table.xlsx",
+                sheet: {
+                    name: "Sheet 1"
+                }
+            });
+        }
+    }
+
 </script>
 
 {% extends "layout.html" %}
@@ -82,14 +95,14 @@
         <button class="counter-btn counter-dec" type="button" onClick="decrease('row')">-</button>
       </div>
       <div class="col-3 counter-display">
-        <label class="counter-label" id="row">0</label>
+        <label class="counter-label" id="row">1</label>
       </div>
       <div class="col-1 offset-2">
         <button class="counter-btn counter-inc" type="button" onClick="increase('stitch')">+</button>
         <button class="counter-btn counter-dec" type="button" onClick="decrease('stitch')">-</button>
       </div>
       <div class="col-3 counter-display">
-        <label class="counter-label" id="stitch">0</label>
+        <label class="counter-label" id="stitch">1</label>
       </div>
     </div>
     <br>
@@ -113,7 +126,7 @@
   </div>
   <br>
   <div class="container">
-    <table class="table table-striped table-hover table-bordered mx-auto text-center">
+    <table class="table table-striped table-hover table-bordered mx-auto text-center" id="table">
       <thead>
         <tr>
           <td>Date/Time</td>
@@ -126,7 +139,9 @@
     </table>
   </div>
   <div class="container">
-
+    <div class="col-1 offset-10">
+      <input type="button" class="myButton" value="Download" onClick="download('table')">
+    </div>
   </div>
 
 

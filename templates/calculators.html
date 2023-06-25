@@ -88,7 +88,7 @@ function bindOn(stsId, widthId, txtId) {
     sts = Number(document.getElementById(stsId).value);
     txt = document.getElementById(txtId)
 
-    if (width == 0 || sts == 0) {
+    if (width < 1 || sts < 1) {
         txt.innerText = "Not Valid!";
     }
 
